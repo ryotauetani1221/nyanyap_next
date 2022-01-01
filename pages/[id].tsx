@@ -127,6 +127,7 @@ export async function getStaticProps({ params }) {
             props: {
                 data,
             },
+            revalidate: 1 // cache
         };
     } catch (e) {
         return { notFound: true };
