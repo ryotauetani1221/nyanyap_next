@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import React, { useRef } from 'react';
 
 const Home: NextPage = ({ data }) => {
+    const ngx_url = process.env.NEXT_PUBLIC_NGX_URL
     const router = useRouter()
     // const { id } = router.query;
     if (router.isFallback) {
@@ -83,9 +84,9 @@ const Home: NextPage = ({ data }) => {
             </div>
             <div ref={mangaElement} className='' style={{ width: '960px' }}>
                 {data.manga.map((manga, index) => (
-                    <div key={index} className='border-2 border-zinc-900 mt-5'>
+                    <div key={index} className='border-4 border-zinc-900 mt-6'>
                         {/* (new URL(manga.koma.url).host) */}
-                        <img key={index} src={'https://docker-ngx-resize-1jmu.onrender.com/small_light' + (new URL(manga.koma.url).pathname) + '?fm=webp&w=960&prox=' + (new URL(manga.koma.url).host)} className='' alt="" />
+                        <img key={index} src={ngx_url + (new URL(manga.koma.url).pathname) + '?fm=webp&w=960&prox=' + (new URL(manga.koma.url).host)} className='' alt="" />
                     </div>
                 ))}
             </div>
