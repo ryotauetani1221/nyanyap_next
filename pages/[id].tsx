@@ -3,16 +3,15 @@ import Head from 'next/head'
 // import Image from 'next/image'
 // import styles from '../styles/Home.module.css'
 import Script from 'next/script'
-import { useRouter } from 'next/router'
+// import { useRouter } from 'next/router'
 import React, { useRef } from 'react';
 
 const Home: NextPage = ({ data }) => {
+    // console.log(data)
+    // data = data.contents;
+    // console.log(data)
     const ngx_url = process.env.NEXT_PUBLIC_NGX_URL
-    const router = useRouter()
     // const { id } = router.query;
-    if (router.isFallback) {
-        return <div>Loading...</div>;
-    }
 
     const mangaElement = useRef();
     async function MakeImage() {
@@ -85,7 +84,6 @@ const Home: NextPage = ({ data }) => {
             <div ref={mangaElement} className='' style={{ width: '960px' }}>
                 {data.manga.map((manga, index) => (
                     <div key={index} className='border-4 border-zinc-900 mt-6'>
-                        {/* (new URL(manga.koma.url).host) */}
                         <img key={index} src={ngx_url + (new URL(manga.koma.url).pathname) + '?fm=webp&w=960&prox=' + (new URL(manga.koma.url).host)} className='' alt="" />
                     </div>
                 ))}
@@ -96,29 +94,28 @@ const Home: NextPage = ({ data }) => {
 
 export default Home
 
-export async function getStaticPaths() {
-    return {
-        paths: [
-            // { params: { id: '44wpcz353' } }
-        ],
-        fallback: true
-        // fallback: false
-    };
-}
+// export async function getStaticPaths() {
+//     return {
+//         paths: [
+//             // { params: { id: '44wpcz353' } }
+//         ],
+//         fallback: true
+//         // fallback: false
+//     };
+// }
 
 import { client } from "../libs/client";
 
 // ビルド時にも呼び出されます。
-// export const getStaticProps: GetStaticProps = async params => {
-export async function getStaticProps({ params }) {
-    if (!params?.id) {
-        throw new Error("Error: ID not found");
-    }
+// export async function getStaticProps({ params }) {
+export async function getServerSideProps(context) {
+    // const { id } = context.query;
+    // console.log(context.query.id);
 
     try {
         const data = await client.get({
             endpoint: '4koma',
-            contentId: params.id,
+            contentId: context.query.id,
             // contentId: '6p0kyi5iyy16',
         });
 
@@ -127,7 +124,6 @@ export async function getStaticProps({ params }) {
             props: {
                 data,
             },
-            revalidate: 1 // cache
         };
     } catch (e) {
         return { notFound: true };
@@ -135,11 +131,3 @@ export async function getStaticProps({ params }) {
 
 
 }
-
-// const MakeImageBtn = React.forwardRef(({ }) => {
-//     return (
-//         <button onClick={() => (alert(11))}>
-//             画像を作る
-//         </button >
-//     );
-// })
