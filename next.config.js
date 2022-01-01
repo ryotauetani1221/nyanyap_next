@@ -7,5 +7,4 @@ module.exports = {
     // !! 警告 !!
     ignoreBuildErrors: true
   },
-  target: "serverless",
 }
