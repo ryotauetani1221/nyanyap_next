@@ -101,8 +101,8 @@ export async function getStaticPaths() {
         paths: [
             // { params: { id: '44wpcz353' } }
         ],
-        // fallback: true
-        fallback: false
+        fallback: true
+        // fallback: false
     };
 }
 
