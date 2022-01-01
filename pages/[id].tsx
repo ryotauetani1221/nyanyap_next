@@ -46,6 +46,7 @@ const Home: NextPage = ({ data }) => {
 
         html2canvas(mangaElement.current, { allowTaint: true }).then(canvas => {
             mangaElement.current.style.display = 'none';
+            // canvas.title = 'manga';
             document.body.appendChild(canvas);
             console.log(canvas);
 
@@ -80,10 +81,11 @@ const Home: NextPage = ({ data }) => {
                     {data.title}
                 </h1>
             </div>
-            <div ref={mangaElement} className=''>
+            <div ref={mangaElement} className='' style={{ width: '960px' }}>
                 {data.manga.map((manga, index) => (
-                    <div key={index}>
-                        <img src={manga.koma.url} className='border-2 border-zinc-900 mt-5' alt="" />
+                    <div key={index} className='border-2 border-zinc-900 mt-5'>
+                        {/* (new URL(manga.koma.url).host) */}
+                        <img key={index} src={'https://docker-ngx-resize-1jmu.onrender.com/small_light' + (new URL(manga.koma.url).pathname) + '?fm=webp&w=960&prox=' + (new URL(manga.koma.url).host)} className='' alt="" />
                     </div>
                 ))}
             </div>
