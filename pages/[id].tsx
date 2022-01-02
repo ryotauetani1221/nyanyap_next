@@ -7,57 +7,53 @@ import Script from 'next/script'
 import React, { useRef } from 'react';
 
 const Home: NextPage = ({ data }) => {
-    // console.log(data)
-    // data = data.contents;
-    // console.log(data)
     const ngx_url = process.env.NEXT_PUBLIC_NGX_URL
-    // const { id } = router.query;
 
     const mangaElement = useRef();
     async function MakeImage() {
 
-        // 取得してbase64画像化されたテキストを返す関数
-        async function getImageBase64(url) {
-            const response = await fetch(url)
-            const contentType = response.headers.get('content-type')
-            const arrayBuffer = await response.arrayBuffer()
-            const APPLY_MAX = 1024
-            let encodedStr = ''
-            // ArrayBufferの中身を1024バイトに区切って少しずつ文字列にしていく
-            for (var i = 0; i < arrayBuffer.byteLength; i += APPLY_MAX) {
-                encodedStr += String.fromCharCode.apply(
-                    null,
-                    new Uint8Array(arrayBuffer.slice(i, i + APPLY_MAX))
-                )
-            }
-            let base64String = btoa(encodedStr)
-            return `data:${contentType};base64,${base64String}`
+
+
+        // let imgDoms = mangaElement.current.querySelectorAll('img');
+        // imgDoms.forEach(async (imgDom) => {
+        //     imgDom.src = await getImageBase64(imgDom.src);
+        //     console.log(imgDom.src);
+        // });
+
+        const mangaBlock = mangaElement.current.querySelectorAll('.mangaBlock');
+
+        // mangaBlock.forEach(async (element) => {
+        //     let makeCanvas = await html2canvas(element, { allowTaint: true });
+        //     element.style.display = 'none';
+        //     makeCanvas.className = 'float-left';
+        //     document.body.appendChild(makeCanvas);
+        // });
+
+        var length = mangaBlock.length;
+        for (let i = 0; i < length; i++) {
+            let makeCanvas = await html2canvas(mangaBlock[i], { allowTaint: true });
+            mangaBlock[i].style.display = 'none';
+            // makeCanvas.className = 'float-left display-block hover:opacity-50 p-2';
+            makeCanvas.className = 'float-left p-2';
+            document.body.appendChild(makeCanvas);
         }
+        document.querySelector('html').className = 'bg-gray-200'
 
-        // console.log(mangaElement.current.querySelector('img'));
-        let imgDoms = mangaElement.current.querySelectorAll('img');
-        imgDoms.forEach(async (imgDom) => {
-            imgDom.src = await getImageBase64(imgDom.src);
-            console.log(imgDom.src);
-        });
-        // imgDom.src = await getImageBase64(imgDom.src);
 
-        // console.log(mangaElement.current);
+        // html2canvas(mangaElement.current, { allowTaint: true }).then(canvas => {
+        //     mangaElement.current.style.display = 'none';
+        //     // canvas.title = 'manga';
+        //     document.body.appendChild(canvas);
+        //     console.log(canvas);
 
-        html2canvas(mangaElement.current, { allowTaint: true }).then(canvas => {
-            mangaElement.current.style.display = 'none';
-            // canvas.title = 'manga';
-            document.body.appendChild(canvas);
-            console.log(canvas);
-
-            // window.location = canvas;
-            // const a = document.createElement("a");
-            // console.log(canvas);
-            // a.href = canvas.toDataURL();
-            // a.download = "sampleData.jpg"; //フォーマットによってファイル拡張子を変えている
-            // a.click();
-            // a.remove();
-        });
+        //     // window.location = canvas;
+        //     // const a = document.createElement("a");
+        //     // console.log(canvas);
+        //     // a.href = canvas.toDataURL();
+        //     // a.download = "sampleData.jpg"; //フォーマットによってファイル拡張子を変えている
+        //     // a.click();
+        //     // a.remove();
+        // });
     }
     return (
         <div className='container'>
@@ -77,16 +73,41 @@ const Home: NextPage = ({ data }) => {
                 </p>
 
                 <h3 className='mb-1'>タイトル</h3>
-                <h1 className="mt-0">
+                <h1 className="mt-0 mb-6">
                     {data.title}
                 </h1>
+                <div className='display-none mt-0 mt-3 p-2'></div>
             </div>
-            <div ref={mangaElement} className='' style={{ width: '960px' }}>
-                {data.manga.map((manga, index) => (
-                    <div key={index} className='border-4 border-zinc-900 mt-6'>
+            <div ref={mangaElement} className={'grid grid-cols-' + chunk(data.manga, 4).length} >
+                {chunk(data.manga, 4).map((item, index) => {
+                    return (
+                        <div key={index} style={{ width: '428px' }} className='mangaBlock'>
+                            {
+                                item.map((manga, index) => {
+                                    return (
+                                        <div key={index} className={'hover:opacity-50 border-4 border-zinc-900 mt-' + ((index / 4 === 0) ? '0' : '3')} >
+                                            <img key={index} src={ngx_url + (new URL(manga.koma.url).pathname) + '?fm=webp&w=960&prox=' + (new URL(manga.koma.url).host)} className='' alt="" />
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
+                    )
+
+                })}
+                {/* {data.manga.map((manga, index) => {
+                    return (
+                        <div key={index} className='border-4 border-zinc-900 mt-6' >
+                            <img key={index} src={ngx_url + (new URL(manga.koma.url).pathname) + '?fm=webp&w=960&prox=' + (new URL(manga.koma.url).host)} className='' alt="" />
+                        </div>
+                    )
+                })} */}
+
+                {/* {data.manga.map((manga, index) => (
+                    <div key={index} className='border-4 border-zinc-900 mt-6' >
                         <img key={index} src={ngx_url + (new URL(manga.koma.url).pathname) + '?fm=webp&w=960&prox=' + (new URL(manga.koma.url).host)} className='' alt="" />
                     </div>
-                ))}
+                ))} */}
             </div>
         </div >
     )
@@ -128,6 +149,11 @@ export async function getServerSideProps(context) {
     } catch (e) {
         return { notFound: true };
     }
+}
 
-
+function chunk<T extends any[]>(arr: T, size: number) {
+    return arr.reduce(
+        (newarr, _, i) => (i % size ? newarr : [...newarr, arr.slice(i, i + size)]),
+        [] as T[][]
+    )
 }
