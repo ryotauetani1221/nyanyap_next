@@ -12,26 +12,11 @@ const Home: NextPage = ({ data }) => {
     const mangaElement = useRef();
     async function MakeImage() {
 
-
-
-        // let imgDoms = mangaElement.current.querySelectorAll('img');
-        // imgDoms.forEach(async (imgDom) => {
-        //     imgDom.src = await getImageBase64(imgDom.src);
-        //     console.log(imgDom.src);
-        // });
-
         const mangaBlock = mangaElement.current.querySelectorAll('.mangaBlock');
-
-        // mangaBlock.forEach(async (element) => {
-        //     let makeCanvas = await html2canvas(element, { allowTaint: true });
-        //     element.style.display = 'none';
-        //     makeCanvas.className = 'float-left';
-        //     document.body.appendChild(makeCanvas);
-        // });
 
         var length = mangaBlock.length;
         for (let i = 0; i < length; i++) {
-            let makeCanvas = await html2canvas(mangaBlock[i], { allowTaint: true });
+            let makeCanvas = await html2canvas(mangaBlock[i], { allowTaint: true, scale: 3, });
             mangaBlock[i].style.display = 'none';
             // makeCanvas.className = 'float-left display-block hover:opacity-50 p-2';
             makeCanvas.className = 'float-left p-2';
