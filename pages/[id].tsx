@@ -86,7 +86,7 @@ const Home: NextPage = ({ data }) => {
                                 item.map((manga, index) => {
                                     return (
                                         <div key={index} className={'hover:opacity-50 border-4 border-zinc-900 ' + ((index / 4 === 0) ? 'mt-0' : '')} style={{ marginTop: ((index / 4 === 0) ? '' : '24px;') }} >
-                                            <img key={index} src={ngx_url + (new URL(manga.koma.url).pathname) + '?fm=webp&w=960&prox=' + (new URL(manga.koma.url).host)} className='' alt="" />
+                                            <img key={index} src={ngx_url + (new URL(manga.koma.url).pathname) + '?fm=webp&prox=' + (new URL(manga.koma.url).host)} className='' alt="" />
                                         </div>
                                     )
                                 })
