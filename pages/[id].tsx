@@ -16,7 +16,7 @@ const Home: NextPage = ({ data }) => {
 
         var length = mangaBlock.length;
         for (let i = 0; i < length; i++) {
-            let makeCanvas = await html2canvas(mangaBlock[i], { allowTaint: true, scale: 2, });
+            let makeCanvas = await html2canvas(mangaBlock[i], { allowTaint: true, scale: 1, });
             mangaBlock[i].style.display = 'none';
             // makeCanvas.className = 'float-left display-block hover:opacity-50 p-2';
             makeCanvas.className = 'float-left p-2';
