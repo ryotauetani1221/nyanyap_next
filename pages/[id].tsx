@@ -4,11 +4,31 @@ import Head from 'next/head'
 import React, { useRef } from 'react';
 import dynamic from 'next/dynamic';
 const Canvas = dynamic(() => import('../components/canvas'), { ssr: false })
-
+import { toPng } from 'html-to-image';
+import ReactLoading from 'react-loading';
+import ReactDOM from 'react-dom';
 
 const Home: NextPage = ({ data }) => {
     const ngx_url = process.env.NEXT_PUBLIC_NGX_URL
     const mangaElement = useRef();
+
+    async function MakeImage() {
+        const mangaElementDom = mangaElement.current.querySelectorAll('.mangaBlock')
+        // mangaElement.current.render(<div className='text-center'><ReactLoading type="spin" /></div>, mangaElement.current)
+        // ReactDOM.render(<div className='text-center'><ReactLoading type="spin" /></div>, mangaElement.current)
+        mangaElementDom.forEach(async (element, index) => {
+
+            const png = await toPng(element, { cacheBust: true, })
+            const link = document.createElement('a')
+            link.download = data.title + ('00' + (index + 1)).slice(-2)
+            link.href = png
+            link.click()
+
+        });
+        // ReactDOM.render(<p>完了!!</p>, mangaElement.current)
+
+
+    }
 
     return (
         <div className='container'>
@@ -27,15 +47,18 @@ const Home: NextPage = ({ data }) => {
                     {data.title}
                 </h1>
             </div>
-            <Canvas src={data.manga} />
 
+            {/* <Canvas src={data.manga} /> */}
+            <button onClick={MakeImage}>
+                画像をまとめて作る
+            </button >
             <div className='display-none mt-0 mt-3 p-2'></div>
             <h2 className='mb-3 font-bold'>↓元画像</h2>
 
             <div ref={mangaElement} className={'grid grid-cols-' + chunk(data.manga, 4).length} >
                 {chunk(data.manga, 4).map((item, index) => {
                     return (
-                        <div key={index} style={{ width: '428px' }} className={'self-start mangaBlock' + (index + 1)}>
+                        <div key={index} style={{ width: '428px' }} className={'self-start mangaBlock mangaBlock' + (index + 1)}>
                             {
                                 item.map((manga, index) => {
                                     return (
