@@ -35,7 +35,7 @@ const Home: NextPage = ({ data }) => {
             <div ref={mangaElement} className={'grid grid-cols-' + chunk(data.manga, 4).length} >
                 {chunk(data.manga, 4).map((item, index) => {
                     return (
-                        <div key={index} style={{ width: '428px' }} className='mangaBlock'>
+                        <div key={index} style={{ width: '428px' }} className={'mangaBlock' + index}>
                             {
                                 item.map((manga, index) => {
                                     return (
