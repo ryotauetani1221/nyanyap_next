@@ -55,14 +55,15 @@ const Home: NextPage = ({ data }) => {
             <div className='display-none mt-0 mt-3 p-2'></div>
             <h2 className='mb-3 font-bold'>↓元画像</h2>
 
-            <div ref={mangaElement} className={'grid grid-cols-' + chunk(data.manga, 4).length} >
-                {chunk(data.manga, 4).map((item, index) => {
+            {/* <div ref={mangaElement} className={'grid grid-cols-' + chunk(data.manga, 2).length} > */}
+            <div ref={mangaElement} className={'grid grid-cols-3 gap-3'} >
+                {chunk(data.manga, 2).map((item, index) => {
                     return (
                         <div key={index} style={{ width: '428px' }} className={'self-start mangaBlock mangaBlock' + (index + 1)}>
                             {
                                 item.map((manga, index) => {
                                     return (
-                                        <div key={index} className={'hover:opacity-50 border-4 border-zinc-900 ' + ((index / 4 === 0) ? 'mt-0' : '')} style={{ marginTop: ((index / 4 === 0) ? '' : '24px;') }} >
+                                        <div key={index} className={'hover:opacity-50 border-4 border-zinc-900 ' + ((index / 2 === 0) ? 'mt-0' : '')} style={{ marginTop: ((index / 4 === 0) ? '' : '24px;') }} >
                                             <img key={index} src={ngx_url + (new URL(manga.koma.url).pathname) + '?fm=webp&prox=' + (new URL(manga.koma.url).host)} className='' alt="" />
                                         </div>
                                     )
