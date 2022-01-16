@@ -37,7 +37,7 @@ const Home: NextPage = ({ data }) => {
 
             const png = await toPng(element, { cacheBust: true, })
             const link = document.createElement('a')
-            link.download = data.title + ('00' + (index + 1)).slice(-2)
+            link.download = data.title + ('insta_00' + (index + 1)).slice(-2)
             link.href = png
             link.click()
 
