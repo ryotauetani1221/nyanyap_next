@@ -11,6 +11,7 @@ import ReactDOM from 'react-dom';
 const Home: NextPage = ({ data }) => {
     const ngx_url = process.env.NEXT_PUBLIC_NGX_URL
     const mangaElement = useRef();
+    const mangaElementInsta = useRef();
 
     async function MakeImage() {
         const mangaElementDom = mangaElement.current.querySelectorAll('.mangaBlock')
@@ -28,6 +29,19 @@ const Home: NextPage = ({ data }) => {
         // ReactDOM.render(<p>完了!!</p>, mangaElement.current)
 
 
+    }
+
+    async function MakeImageInsta() {
+        const mangaElementDom = mangaElementInsta.current.querySelectorAll('.mangaBlock')
+        mangaElementDom.forEach(async (element, index) => {
+
+            const png = await toPng(element, { cacheBust: true, })
+            const link = document.createElement('a')
+            link.download = data.title + ('00' + (index + 1)).slice(-2)
+            link.href = png
+            link.click()
+
+        });
     }
 
     return (
@@ -48,9 +62,8 @@ const Home: NextPage = ({ data }) => {
                 </h1>
             </div>
 
-            {/* <Canvas src={data.manga} /> */}
             <button onClick={MakeImage}>
-                画像をまとめて作る
+                livedoor画像をまとめて作る
             </button >
             <div className='display-none mt-0 mt-3 p-2'></div>
             <h2 className='mb-3 font-bold'>↓元画像</h2>
@@ -86,6 +99,43 @@ const Home: NextPage = ({ data }) => {
                         <img key={index} src={ngx_url + (new URL(manga.koma.url).pathname) + '?fm=webp&w=960&prox=' + (new URL(manga.koma.url).host)} className='' alt="" />
                     </div>
                 ))} */}
+            </div>
+
+            <div className="my-6">
+                <button onClick={MakeImageInsta} className='my-3'>
+                    insta画像をまとめて作る
+                </button >
+                <div ref={mangaElementInsta} className={''} >
+                    {chunk(data.manga, 1).map((item, index) => {
+                        return (
+                            <div key={index} style={{ width: '1080px' }} className={'self-start mangaBlock mangaBlock' + (index + 1)}>
+                                {
+                                    item.map((manga, index) => {
+                                        return (
+                                            <div key={index} className={'hover:opacity-50  bg-white flex items-center ' + ((index / 2 === 0) ? 'mt-0' : '')} style={{ height: '1080px', marginTop: ((index / 4 === 0) ? '' : '24px;') }} >
+                                                <img key={index} src={ngx_url + (new URL(manga.koma.url).pathname) + '?fm=webp&prox=' + (new URL(manga.koma.url).host)} className='' alt="" />
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </div>
+                        )
+
+                    })}
+                    {/* {data.manga.map((manga, index) => {
+                    return (
+                        <div key={index} className='border-4 border-zinc-900 mt-6' >
+                            <img key={index} src={ngx_url + (new URL(manga.koma.url).pathname) + '?fm=webp&w=960&prox=' + (new URL(manga.koma.url).host)} className='' alt="" />
+                        </div>
+                    )
+                })} */}
+
+                    {/* {data.manga.map((manga, index) => (
+                    <div key={index} className='border-4 border-zinc-900 mt-6' >
+                        <img key={index} src={ngx_url + (new URL(manga.koma.url).pathname) + '?fm=webp&w=960&prox=' + (new URL(manga.koma.url).host)} className='' alt="" />
+                    </div>
+                ))} */}
+                </div>
             </div>
         </div >
     )
